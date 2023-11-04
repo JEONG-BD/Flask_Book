@@ -6,3 +6,4 @@ isort
 mypy
 flask_restx
 emmail-validator 
+flask-debugtoolbar 
