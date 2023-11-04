@@ -1,0 +1,8 @@
+python-dotenv 
+flask 
+flake8 
+black 
+isort 
+mypy
+flask_restx
+emmail-validator 
