@@ -7,24 +7,25 @@
 </head>
 <body>
     <h2>Contact Us Form</h2>    
-    {% with messages=get_flushed_message() %}
-    {% if messagees %}
+    {% with messages=get_flashed_messages() %}
+    {% if messages %}
     <ul>
-        {% for message in messagees%}
+        {% for message in messages %}
         <li class="flash">{{message}}</li>
         {%endfor%}
     </ul>
     {% endif %}
     {% endwith %}
-    <form action= "{{url_for('contact_complete')}}"
+
+    <form action= "{{ url_for('contact_complete') }}"
             method="POST"
             novalidate="novalidate">
         <table>
             <tr>
                 <td>User Name
                     <input type="text" 
-                    name="name" 
-                    value="{{username}}"
+                    name="username" 
+                    value="{{ username }}"
                     placeholder="User Name"/>
                 </td>         
             </tr>
@@ -32,7 +33,7 @@
                 <td>E-Mail
                     <input type="text"
                     name="email"
-                    value="{{email}}"
+                    value="{{ email }}"
                     placeholder="E-Mail"/>
                 </td>
             </tr>
