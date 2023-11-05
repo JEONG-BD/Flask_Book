@@ -1,0 +1,7 @@
+{{username}} 
+
+Thank you for your inquiry 
+
+Here's what the inquiry looks like 
+
+{{description}}

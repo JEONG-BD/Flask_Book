@@ -1,4 +1,6 @@
-import logging 
+import os 
+import logging
+from flask_mail import Mail, Message 
 from email_validator import validate_email, EmailNotValidError 
 from flask import (
     Flask, 
@@ -22,7 +24,17 @@ app.logger.warning('warning')
 app.logger.info('info')
 app.logger.debug('debug')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-toolbar = DebugToolbarExtensihon(app)
+
+# Mail 
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
+app.config['MAIL_PORT'] = os.environ.get('MAIL_PORT')
+# app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS')
+app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL')
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
+mail = Mail(app)
+toolbar = DebugToolbarExtension(app)
 
 @app.route('/')
 def index():
@@ -93,11 +105,22 @@ def contact_complete():
             return redirect(url_for('contact'))
         
         flash('Thank you for your inquiry')
+
+        send_email(email, 
+                   "Thank you", 
+                   "contact_mail", 
+                   username=username, 
+                   description=description)
         return redirect(url_for("contact_complete"))
     
     return render_template('contact_complete.html')
 
-
+def send_email(to, subject, template, **kwargs):
+    msg = Message(subject, recipients=[to])
+    msg.body = render_template(template + ".txt", **kwargs)
+    msg.html = render_template(template + ".html", **kwargs)
+    mail.send(msg)
+    
 with app.test_request_context("/users?update=true"):
     print(request.args.get('updated'))
     print(url_for('index'))
