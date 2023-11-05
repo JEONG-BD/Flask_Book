@@ -10,19 +10,21 @@ from flask import (
     redirect, 
     g, 
     flash, 
-    current_app
+    current_app, 
+    make_response, 
+    session
 )
 from flask_debugtoolbar import DebugToolbarExtension 
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '2AZSMss3p05QpbcY2hBsJ'
-app.logger.setLevel(logging.DEBUG)
-app.logger.critical('fatal error')
-app.logger.error('error')
-app.logger.warning('warning')
-app.logger.info('info')
-app.logger.debug('debug')
+#app.logger.setLevel(logging.DEBUG)
+#app.logger.critical('fatal error')
+#app.logger.error('error')
+#app.logger.warning('warning')
+#app.logger.info('info')
+#app.logger.debug('debug')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 # Mail 
@@ -69,8 +71,11 @@ def show_name(name):
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')
-
+    response = make_response(render_template('contact.html'))
+    response.set_cookie('flaskbook key', 'flaskbook value')
+    session['username'] = 'AK'
+    #return render_template('contact.html')
+    return response
 
 @app.route('/contact/complete', methods=['GET', 'POST'])
 def contact_complete():   
