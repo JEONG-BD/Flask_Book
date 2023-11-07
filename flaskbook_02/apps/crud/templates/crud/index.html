@@ -7,6 +7,23 @@
     <link rel="stylesheet", href="{{ url_for('crud.static', filename='style.css') }}"></link>
 </head>
 <body>
-    <p class>CRUD Application</p>
+    <h2 class>USER Information</h2>
+    <a href = "{{ url_for('crud.create_user')}}">New User Register</a>
+    <table>
+        <tr>
+            <th>Edit</th>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>E-Mail</th>
+        </tr>
+        {% for user in users%}
+        <tr>
+            <td><a href="{{ url_for('crud.edit_user' , user_id=user.id)}}">{{user.id}}</a></td>
+            <td>{{user.id}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+        </tr>
+        {% endfor%}
+    </table>
 </body>
 </html>

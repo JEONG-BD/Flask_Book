@@ -22,7 +22,13 @@ def sql():
     return 'Check your console logs'
 
 
-@crud.route('/users/news', methods=["GET", "POST"])
+@crud.route("/users")
+def users():
+    users = User.query.all()
+    return render_template('crud/index.html', users=users)
+
+
+@crud.route('/users/new', methods=["GET", "POST"])
 def create_user():
     form = UserForm()
 
@@ -39,3 +45,27 @@ def create_user():
         return redirect(url_for("crud.users"))
     return render_template('crud/create.html', form=form)
 
+
+@crud.route('/users/<user_id>', methods=['POST', 'GET'])
+def edit_user(user_id):
+    form = UserForm()
+
+    user = User.query.filter_by(id=user_id).first()
+
+    if form.validate_on_submit():
+        user.username = form.username.data 
+        user.email = form.email.data 
+        user.password = form.password.data 
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('crud.users'))
+
+    return render_template('crud/edit.html', user=user, form=form)
+ 
+
+@crud.route('/users/<user_id>/delete', methods=['POST', 'GET'])
+def delete_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for("crud.users"))
