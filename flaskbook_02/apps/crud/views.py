@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, url_for, redirect
 from apps.app import db 
 from apps.crud.models import User 
 from apps.crud.forms import UserForm
+from flask_login import login_required 
 
 crud = Blueprint(
     'crud', 
@@ -12,23 +13,27 @@ crud = Blueprint(
 
 
 @crud.route('/')
+@login_required
 def index():
     return render_template('crud/index.html')
 
 
 @crud.route('/sql')
+@login_required
 def sql():
     db.session.query(User).all()
     return 'Check your console logs'
 
 
 @crud.route("/users")
+@login_required
 def users():
     users = User.query.all()
     return render_template('crud/index.html', users=users)
 
 
 @crud.route('/users/new', methods=["GET", "POST"])
+@login_required
 def create_user():
     form = UserForm()
 
@@ -47,6 +52,7 @@ def create_user():
 
 
 @crud.route('/users/<user_id>', methods=['POST', 'GET'])
+@login_required
 def edit_user(user_id):
     form = UserForm()
 
@@ -61,9 +67,10 @@ def edit_user(user_id):
         return redirect(url_for('crud.users'))
 
     return render_template('crud/edit.html', user=user, form=form)
- 
 
+ 
 @crud.route('/users/<user_id>/delete', methods=['POST', 'GET'])
+@login_required
 def delete_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     db.session.delete(user)
