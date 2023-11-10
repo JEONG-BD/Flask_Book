@@ -11,7 +11,7 @@ novalidate="novalidate">
         <p style="color:red;"> {{ message }} </p>
     {% endfor %} {{ form.csrf_token }}
     <p>
-        {{ form.email.Label }}
+        {{ form.email.label }}
         {{ form.email(placenolder="E-Mail") }}
     </p>
     {% for error in form.email.errors %}
