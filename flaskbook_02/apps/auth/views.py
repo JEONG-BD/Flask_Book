@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, flash, url_for, redirect, request  
 from apps.app import db 
-from apps.auth.forms import SignUpForm
+from apps.auth.forms import SignUpForm, LoginForm
 from apps.crud.models import User 
 from flask_login import login_user 
 auth = Blueprint(
@@ -13,6 +13,7 @@ auth = Blueprint(
 @auth.route('/')
 def index():
     return render_template('auth/index.html')
+
 
 @auth.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -42,4 +43,18 @@ def signup():
     
     return render_template('auth/signup.html', form=form)
 
-           
+
+@auth.route('/login', methods=['POST', 'GET'])
+def login():
+    
+    form = LoginForm() 
+    
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+    
+        if user is not None and user.verify_password(form.password.data):
+            login_user(user)
+            return redirect(url_for('crud.users'))
+        flash("The email address or password doesn't match.")
+    
+    return render_template('auth/login.html', form=form)
